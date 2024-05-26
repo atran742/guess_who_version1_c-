@@ -1,0 +1,225 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+
+using namespace std;
+
+class Game {
+private:
+    vector<string> board1;
+    vector<string> board2;
+    int rounds;
+    string guess1;
+    string guess2;
+    bool winner1 = false;
+    bool winner2 =  false;
+
+public:
+
+    Game()
+    {
+        rounds=0;
+    }
+
+    void startGame()
+    {
+        string start;
+        cout<<"Would you like to start the game? Enter 'y' for yes and 'n' for no"<<endl;
+        cin>>start;
+        if(start=="n")
+            cout<<"Ending game"<<endl;
+        else if((start!= "n")&& (start!="y")){
+            cout<<"This value will not work";
+        }
+        else{
+            enterGame();
+        }
+    }
+    void enterGame() {
+
+        int numCharacters;
+        bool go = true;
+        bool go2 = true;
+        string charactName;
+        string option;
+        int rand1;
+        int rand2;
+
+        cout << "Enter how many characters would you like on the board(number value)" << endl;
+        cin >> numCharacters;
+
+        if (numCharacters <= 0) {
+            cout << "How you gonna play this game huh?" << endl;
+        } else {
+
+                cout << "Enter each character" << endl;
+                for(int i = 0;i<numCharacters;i++) {
+                    cin >> charactName;
+                    board1.push_back(charactName);
+                    board2.push_back(charactName);
+                }
+
+        }
+        string play2;
+        string next;
+
+        cout<<"Player 1 must now get a character for player two to guess. Dont let player 2 see heheheheh"<<endl;
+        rand1= (rand()%board1.size());
+        cout<<"Player 1 your character is "<<board1[rand1]<<". Enter 'next' to get player 2's character"<<endl;
+        guess1 = board1[rand1];
+        cin>>play2;
+        if(play2=="next") {
+            cout << "Player 2's turn " << endl;
+            cout << "Player 2 must now get a character for player two to guess. Dont let player 1 see heheheheh"<< endl;
+            rand2 = rand() % (board2.size());
+            cout << "Player 2 your character is " << board2[rand2] << ". Enter 'next' to start the game. "<<endl;
+            guess2 = board2[rand2];
+            cin>>next;
+            if(next=="next")
+            playGame();
+        }
+    }
+    void play1()
+    {
+        int play1Calls = 1;
+        string  pl1Answer;
+        //int num;
+        string guess;
+        bool finished = true;
+
+        cout << "Player 1 ask your question" << endl;
+        cout << "Enter the charcters you would like to eliminate. Enter 'Done' when you are finished " << endl;
+
+        while (finished) {
+            cout << "Enter character "<< play1Calls<< endl;
+            play1Calls++;
+            cin >> pl1Answer;
+            auto num = find(board1.begin(),board1.end(), pl1Answer);
+            if(num != board1.end())
+                board1.erase(num);
+            if (pl1Answer == "Done") {
+                finished = false;
+            }
+            //keep calling playGame in main till a winner is found
+        }
+        printBoard1();
+        string val;
+
+        cout<<"Would you like to guess (Enter y/n)"<<endl;
+        cin>>guess;//maybe change this to be a winner thing
+        if(guess=="y") {
+            cout << "Enter your guess" << endl;
+            cin >> val;
+            if (isWinner2(val)) {
+                cout<<"We have a winner!"<<endl;
+                winner1 = true;
+            }
+        }
+    }
+
+    void play2()
+    {
+        bool finished2 = true;
+        int pl2Calls = 1;
+        string pl2Answer;
+
+        int num2;
+        char guess;
+        string val;
+        bool finished = true;
+
+        cout << "Player 2 ask your question" << endl;
+        cout << "Enter the charcters you would like to eliminate. Enter 'Done' when you are finished " << endl;
+
+        while (finished2) {
+
+            cout << "Enter character " << pl2Calls << endl;
+            pl2Calls++;
+            cin >> pl2Answer;
+            auto num = find(board2.begin(),board2.end(), pl2Answer);
+            if(num != board2.end())
+                board2.erase(num);
+            if (pl2Answer == "Done") {
+                finished2 = false;
+            }
+
+            }
+        printBoard2();
+            cout<<"Would you like to guess (Enter y/n)"<<endl;
+            cin>>guess;
+            if(guess=='y') {
+                cout << "Enter your guess" << endl;
+                cin >> val;
+                if (isWinner1(val)) {
+                    cout<<"We have a winner!"<<endl;
+                    winner2 =  true;
+                }
+            //keep calling playGame in main till a winner is found
+        }
+
+        // }
+    }
+
+    void playGame() {//seperate this into two functions switch back and fourth
+        rounds++;
+
+        cout << "starting round" << rounds << endl;
+
+         if(!winner2)
+             play1();
+         if(!winner1) {
+             play2();
+             rounds++;
+         }
+
+            if(board1.size()==0&&board2.size()==0)
+            {
+                cout<<"There is no winner"<<endl;
+            }
+
+
+
+    }
+
+    void printBoard1(){
+        string last = board1[board1.size()-1];
+        for(int i =0;i<board1.size();i++){
+            if(board1[i]==last)
+                cout<<board1[i]<<" "<<endl;
+            else{
+                cout<<board1[i]<<", ";
+            }
+        }
+    }
+
+    void printBoard2(){
+        string last = board2[board2.size()-1];
+        for(int i =0;i<board2.size();i++){
+            if(board2[i]==last)
+                cout<<board2[i]<<" "<<endl;
+            else{
+                cout<<board2[i]<<", ";
+            }
+        }
+    }
+
+    bool isWinner1(string guess)
+    {
+        if(guess==guess1)
+            return true;
+    }
+    bool isWinner2(string guess)
+    {
+        if(guess== guess2)
+            return true;
+    }
+
+};
+
+int main() {
+    Game *newGame = new Game();
+
+    newGame->startGame();
+
+    return 0;
+}
