@@ -63,17 +63,19 @@ public:
         string play2;
         string next;
 
+        srand(time(0));
+
         cout<<"Player 1 must now get a character for player two to guess. Dont let player 2 see heheheheh"<<endl;
         rand1= (rand()%board1.size());
         cout<<"Player 1 your character is "<<board1[rand1]<<". Enter 'next' to get player 2's character"<<endl;
-        guess1 = board1[rand1];
+        guess1 = board1.at(rand1);
         cin>>play2;
         if(play2=="next") {
             cout << "Player 2's turn " << endl;
             cout << "Player 2 must now get a character for player two to guess. Dont let player 1 see heheheheh"<< endl;
             rand2 = rand() % (board2.size());
             cout << "Player 2 your character is " << board2[rand2] << ". Enter 'next' to start the game. "<<endl;
-            guess2 = board2[rand2];
+            guess2 = board2.at(rand2);
             cin>>next;
             if(next=="next")
             playGame();
